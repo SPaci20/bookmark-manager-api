@@ -63,19 +63,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# =============================================================================
-# DATABASE CONFIGURATION - FIXED FOR RAILWAY
-# =============================================================================
-
 # First, try to use DATABASE_URL from environment (Railway provides this)
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
     # Production - Use Railway's PostgreSQL
     DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+        'default': dj_database_url.parse(
+            DATABASE_URL, 
+            conn_max_age=600,
+            # CRITICAL FIX: Add 'ssl_require=True' to force SSL/TLS connection.
+            # This is necessary for connecting to the remote Railway database 
+            # both during deployment and when using 'railway run'.
+            ssl_require=True 
+        )
     }
-    print("Using PostgreSQL database from DATABASE_URL")
+    print("Using PostgreSQL database from DATABASE_URL with SSL")
 else:
     # Development - Use SQLite
     DATABASES = {
