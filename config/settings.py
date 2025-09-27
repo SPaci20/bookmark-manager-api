@@ -23,7 +23,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key-for-dev-o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['*']  # Allow all hosts for now, you can restrict later
+ALLOWED_HOSTS = ['*']  # Allow all hosts for now
 
 # Application definition
 INSTALLED_APPS = [
@@ -74,18 +74,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database Configuration - FIXED FOR RAILWAY
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# =============================================================================
+# STEP 1: DATABASE CONFIGURATION - FIXED FOR RAILWAY
+# =============================================================================
 
-# Use PostgreSQL if DATABASE_URL exists (Railway provides this)
+# Database Configuration - FORCE PostgreSQL on Railway
 DATABASE_URL = os.environ.get('DATABASE_URL')
+
 if DATABASE_URL:
-    DATABASES['default'] = dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
+    # Use PostgreSQL (Production - Railway)
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
+    }
+else:
+    # Use SQLite (Development)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+# =============================================================================
+# STEP 2: ADDITIONAL POSTGRESQL HANDLING
+# =============================================================================
+
+# Add this to handle PostgreSQL properly
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
