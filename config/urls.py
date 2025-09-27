@@ -16,31 +16,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import RedirectView  # Import RedirectView
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
+from django.http import JsonResponse
 
-# Simple Swagger configuration (Updated)
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Bookmark Manager API",
-        default_version='v1',
-        # Updated description as requested
-        description="A professional REST API for bookmark management with JWT authentication, collections, and tag-based filtering.", 
-    ),
-    public=True,
-    permission_classes=(permissions.AllowAny,),
-)
+def home(request):
+    return JsonResponse({
+        "status": "success",
+        "message": "Bookmark Manager API",
+        "documentation": "Use /api/ endpoints with Thunder Client or Postman",
+        "tested_endpoints": [
+            "POST /api/auth/register/",
+            "POST /api/auth/login/", 
+            "GET/POST /api/collections/",
+            "GET/POST /api/bookmarks/",
+            "GET /api/bookmarks/tag/{tag}/"
+        ]
+    })
 
 urlpatterns = [
-    # Redirect root path to Swagger documentation (Added)
-    path('', RedirectView.as_view(url='/swagger/', permanent=False)), 
-    
+    path('', home),
     path('admin/', admin.site.urls),
     path('api/', include('bookmarks.urls')),
-
-    # Documentation URLs
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
