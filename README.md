@@ -8,7 +8,6 @@ A professional REST API for managing bookmarks with collections and tag-based fi
 - **Collection Management** - Organize bookmarks into customizable collections
 - **Smart Tag Filtering** - Advanced search by tags with partial matching
 - **RESTful Design** - Clean, predictable API endpoints following best practices
-- **Swagger Documentation** - Interactive API documentation with live testing
 - **User Isolation** - Secure data separation between users
 - **CRUD Operations** - Full Create, Read, Update, Delete functionality
 
@@ -137,3 +136,19 @@ This project follows PEP 8 standards and uses Django best practices.
 
 📞 Support
 For questions or issues, please open an issue in the GitHub repository.
+
+## 🚀 Live Demo
+
+- **API Base URL:** https://bookmark-manager-api.up.railway.app/api/
+- **All endpoints are functional and tested**
+- **Note:** Swagger UI temporarily disabled due to deployment configuration
+
+## Test the API
+
+Use Thunder Client or Postman to test these endpoints:
+
+1. **Register User:** POST `/api/auth/register/`
+2. **Login:** POST `/api/auth/login/` 
+3. **Create Collection:** POST `/api/collections/` (with JWT token)
+4. **Create Bookmark:** POST `/api/bookmarks/` (with JWT token)
+5. **Filter by Tags:** GET `/api/bookmarks/tag/{tag}/` (your special feature!)
